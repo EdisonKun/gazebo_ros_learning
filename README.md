@@ -3,13 +3,14 @@ Tips: This file is to upload the basic controller on the quadruped model.
 
 1. The namespace of the controller should be attentioned.
    In the simpledog_control.launch file
-   ```cpp
+
+```cpp
    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
  	output="screen" ns="/simpledog" args="joint_state_controller"/>
   ```
-  Which corresponds to the controller load yaml file: simpledog_control.yaml
+Which corresponds to the controller load yaml file: simpledog_control.yaml
 
-  ```cpp
+```cpp
   simpledog:
     # Publish all joint states -----------------------------------
     joint_state_controller:
@@ -17,7 +18,7 @@ Tips: This file is to upload the basic controller on the quadruped model.
       publish_rate: 50
   ```
   And the gazebo tag in the urdf.xacro file
-  ```cpp
+```cpp
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
@@ -28,7 +29,7 @@ Tips: This file is to upload the basic controller on the quadruped model.
   ```
   Otherwise,it will causes the following error:
   ![controller_ns_error](images/2019/07/controller-ns-error.png)
-  And the following picture shows the correct running.
+      And the following picture shows the correct running.
   ![Correct_running](images/2019/07/correct-running.png)
 
 2.
