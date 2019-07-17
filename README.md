@@ -28,7 +28,7 @@ Which corresponds to the controller load yaml file: simpledog_control.yaml
   </gazebo>
   ```
   Otherwise,it will causes the following error:
-  ![controller_ns_error](images/2019/07/controller-ns-error.png)
-  And the following picture shows the correct running:    
+  ![controller_ns_error](images/2019/07/controller-ns-error.png)    
+  And the following picture shows the correct running:
   ![Correct_running](images/2019/07/correct-running.png)
 2.
