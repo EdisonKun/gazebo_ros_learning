@@ -16,9 +16,16 @@
   <gravity value="ture"/>
 </gazebo>
 
+<!-- <gazebo>
+  <plugin name="gazebo_sim" filename="libgazebo_sim.so">
+  </plugin>
+</gazebo> -->
+
 <gazebo>
   <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-    <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    <robotNamespace>$(arg robot_namespace)</robotNamespace>
+    <robotSimType>gazebo_sim</robotSimType>
+    <legacyModeNS>true</legacyModeNS>
   </plugin>
 </gazebo>
 
