@@ -11,7 +11,7 @@
   <xacro:include filename="$(find new_quadruped_model_kp)/urdf/foot_sensor_gazebo.urdf.xacro" />
 
 <gazebo>
-  <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+  <plugin name="GazeboRosControlPluginKP" filename="libgazebo_ros_control_plugin_kp.so">
     <robotSimType>gazebo_sim</robotSimType>
     <robotNamespace>/simpledog</robotNamespace>
     <legacyModeNS>true</legacyModeNS>

@@ -63,6 +63,11 @@ add_library(gazebo_sim
   )
 target_link_libraries(gazebo_sim ${catkin_LIBRARIES})
 
+add_library(gazebo_ros_control_plugin_kp
+    lib/gazebo_ros_control_plugin_kp.cpp
+  )
+target_link_libraries(gazebo_ros_control_plugin_kp ${catkin_LIBRARIES})
+
 add_executable(control_single_joint_node src/control_single_joint.cpp)
 target_link_libraries(control_single_joint_node
   ${catkin_LIBRARIES}
