@@ -3,6 +3,8 @@
      Commit Version: 1.5.0-0-g9aa0fdb  Build Version: 1.5.7004.21443
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot name="new_quadruped_model" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:arg name="robot_namespace" default="/simpledog" />
+
 
   <xacro:arg name="kinect_enabled" default = "true" />
   <!-- <xacro:include filename="$(find new_quadruped_model)/urdf/simpledog_gazebo.urdf.xacro" /> -->
@@ -13,7 +15,7 @@
 <gazebo>
   <plugin name="GazeboRosControlPluginKP" filename="libgazebo_ros_control_plugin_kp.so">
     <robotSimType>gazebo_sim</robotSimType>
-    <robotNamespace>/simpledog</robotNamespace>
+    <robotNamespace>$(arg robot_namespace)</robotNamespace>
     <legacyModeNS>true</legacyModeNS>
   </plugin>
 </gazebo>

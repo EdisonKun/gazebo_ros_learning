@@ -105,7 +105,7 @@ bool MyRobotHWSim::initSim(
     std::vector<std::string> joint_interfaces = transmissions[j].joints_[0].hardware_interfaces_;
     if (joint_interfaces.empty() &&
         !(transmissions[j].actuators_.empty()) &&
-        !(transmissions[j].actuators_[0].hardware_interfaces_.empty()))
+        !(transmissions[j].actuators_[0].hardware_interfaces_.empty()))//the <hardwareinterface> is in the wrong position
     {
       // TODO: Deprecate HW interface specification in actuators in ROS J
       joint_interfaces = transmissions[j].actuators_[0].hardware_interfaces_;

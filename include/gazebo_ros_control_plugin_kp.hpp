@@ -1,3 +1,4 @@
+#pragma once
 //Boost
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>

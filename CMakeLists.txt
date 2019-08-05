@@ -73,6 +73,11 @@ target_link_libraries(control_single_joint_node
   ${catkin_LIBRARIES}
 )
 
+add_library(single_joint_controller_node src/single_joint_controller.cpp)
+target_link_libraries(single_joint_controller_node
+  ${catkin_LIBRARIES}
+)
+
 foreach(dir config launch meshes urdf)
 	install(DIRECTORY ${dir}/
 		DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir})

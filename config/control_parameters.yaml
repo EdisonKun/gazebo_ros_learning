@@ -1,0 +1,4 @@
+  # Publish all joint states -----------------------------------
+  single_joint_controller:
+    type: "controller_ns/single_joint_controller"
+    joints: ['front_left_1_joint', 'front_left_2_joint', 'front_left_3_joint']
