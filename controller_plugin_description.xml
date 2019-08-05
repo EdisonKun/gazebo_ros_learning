@@ -1,5 +1,5 @@
 <library path="lib/libsingle_joint_controller">
-  <class name="controller_ns/singlejointcontroller"
+  <class name="controller_ns/single_joint_controller"
          type="controller_ns::single_joint_controller"
          base_class_type="controller_interface::ControllerBase">
     <description>A single joint  controller.</description>

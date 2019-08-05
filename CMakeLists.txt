@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   control_toolbox
   controller_manager
+  controller_interface
   hardware_interface
   transmission_interface
   pluginlib
@@ -43,10 +44,10 @@ include_directories(
     include
     ${catkin_INCLUDE_DIRS}
     )
-add_library(single_joint_control
-    src/single_joint_control.cpp
-  )
-target_link_libraries(single_joint_control ${catkin_LIBRARIES})
+# add_library(single_joint_control
+#     src/single_joint_control.cpp
+#   )
+# target_link_libraries(single_joint_control ${catkin_LIBRARIES})
 
 add_library(robot_hardware_interface
     lib/robot_hardware_interface.cpp
@@ -56,7 +57,7 @@ target_link_libraries(robot_hardware_interface ${catkin_LIBRARIES})
 add_library(single_joint_hardware_interface
     src/single_joint_hardware_interface.cpp
   )
-target_link_libraries(single_joint_control ${catkin_LIBRARIES})
+# target_link_libraries(single_joint_control ${catkin_LIBRARIES})
 
 add_library(gazebo_sim
     lib/gazebo_sim.cpp
@@ -73,8 +74,8 @@ target_link_libraries(control_single_joint_node
   ${catkin_LIBRARIES}
 )
 
-add_library(single_joint_controller_node src/single_joint_controller.cpp)
-target_link_libraries(single_joint_controller_node
+add_library(single_joint_controller src/single_joint_controller.cpp)
+target_link_libraries(single_joint_controller
   ${catkin_LIBRARIES}
 )
 
