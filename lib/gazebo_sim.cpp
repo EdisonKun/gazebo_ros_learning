@@ -132,12 +132,12 @@ bool MyRobotHWSim::initSim(
 
     // Add data from transmission
     joint_names_[j] = transmissions[j].joints_[0].name_;
-    joint_position_[j] = 3.0;
+    joint_position_[j] = 0.0;
     ROS_INFO("***************%d*****",j);
     joint_velocity_[j] = 0.0;
-    joint_effort_[j] = 10.0;  // N/m for continuous joints
-    joint_effort_command_[j] = 3.0;
-    joint_position_command_[j] = 3.0;
+    joint_effort_[j] = 0.0;  // N/m for continuous joints
+    joint_effort_command_[j] = 0.0;
+    joint_position_command_[j] = 0.0;
     joint_velocity_command_[j] = 0.0;
 
     const std::string& hardware_interface = joint_interfaces.front();

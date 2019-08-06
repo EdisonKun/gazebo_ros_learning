@@ -13,7 +13,7 @@ single_joint_controller::~single_joint_controller()
 }
 
 
-bool single_joint_controller::init(hardware_interface::PositionJointInterface *hardware, ros::NodeHandle &node_handle)
+bool single_joint_controller::init(hardware_interface::EffortJointInterface *hardware, ros::NodeHandle &node_handle)
 {
   ROS_INFO("Initializing single_joint_controller");
 
@@ -39,13 +39,48 @@ bool single_joint_controller::init(hardware_interface::PositionJointInterface *h
       return false;
     }
   }
+
+    urdf::Model urdf;
+    if (!urdf.initParam("/robot_description"))
+    {
+      ROS_ERROR("Failed to parse urdf file");
+      return false;
+    }
+
+    pid_controllers_.resize(num_joints_);
+
+    for(unsigned int i = 0; i < num_joints_; i++)
+    {
+      const auto& joint_name = joint_names_[i];
+
+      urdf::JointConstSharedPtr joint_urdf = urdf.getJoint(joint_name);
+      if(!joint_urdf)
+      {
+        ROS_ERROR("Could not find joint '%s' in urdf", joint_name.c_str());
+        return false;
+      }
+
+    joint_urdfs_.push_back(joint_urdf);
+
+
+    if (!pid_controllers_[i].init(ros::NodeHandle(node_handle,"/single_joint_controller/"
+                                                  + joint_names_[i] + "/pid")))
+    {
+        ROS_ERROR_STREAM("Failed to load PID parameters from" << joint_names_[i] + "/pid");
+    }
+
+    }
   return true;
 }
 
 void single_joint_controller::update(const ros::Time &time, const ros::Duration &period)
 {
+  ROS_INFO("UPDATE THE CONTROLLER!");
+  double command = 0.0;
   for (unsigned int i = 0; i < num_joints_; ++i) {
-    joints_[i].setCommand(i/10);
+    double effort_command = ComputeTorqueFromPositionCommand(command, i, period);
+    joints_[i].setCommand(effort_command);
+    ROS_INFO_STREAM(effort_command);
   }
 }
 
@@ -54,6 +89,36 @@ void single_joint_controller::starting(const ros::Time &time){
 }
 
 void single_joint_controller::stopping(const ros::Time &){}
+
+double single_joint_controller::ComputeTorqueFromPositionCommand(double command, int i, const ros::Duration &period)
+{
+  double command_position = command;
+
+  double error;
+  double command_effort;
+
+  double current_position = joints_[i].getPosition();
+
+  //compute position error
+  if (joint_urdfs_[i]->type == urdf::Joint::REVOLUTE )
+  {
+    angles::shortest_angular_distance_with_limits(
+          current_position, command_position,
+          joint_urdfs_[i]->limits->lower,
+          joint_urdfs_[i]->limits->upper,
+          error);
+  }
+  else if (joint_urdfs_[i]->type == urdf::Joint::CONTINUOUS) {
+    error = angles::shortest_angular_distance(current_position, command_position);
+  }
+  else if (joint_urdfs_[i]->type == urdf::Joint::REVOLUTE) {
+    error = command_position - current_position;
+  }
+
+  //set PID error and compute the PID command with nonuniform time step size
+  command_effort = pid_controllers_[i].computeCommand(error,period);
+  return command_effort;
+}
 
 }//namespace
 

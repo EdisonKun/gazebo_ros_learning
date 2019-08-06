@@ -4,8 +4,8 @@
   <rosparam file="$(find new_quadruped_model_kp)/config/control_parameters.yaml" command="load"/>
 
   <!-- load the controllers -->
-  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-	output="screen" args="single_joint_controller"/>
+  <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+	output="screen" args="single_joint_controller"/> -->
 
   <!-- convert joint states to TF transforms for rviz, etc -->
 </launch>

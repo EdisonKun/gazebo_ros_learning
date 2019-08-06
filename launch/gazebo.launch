@@ -2,7 +2,7 @@
 
   <arg name="robot_namespace" default="/"/>
   <arg name="paused" default="false"/>
-  <arg name="use_sim_time" default="true"/>
+  <arg name="use_sim_time" default="false"/>
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
@@ -27,7 +27,7 @@
    <rosparam file="$(find new_quadruped_model_kp)/config/control_parameters.yaml" command="load"/>
 
    <!-- load the controllers -->
-   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
- 	output="screen" args="single_joint_controller"/>
+   <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+ 	output="screen" args="single_joint_controller"/> -->
 
 </launch>
