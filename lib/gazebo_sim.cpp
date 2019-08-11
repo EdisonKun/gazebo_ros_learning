@@ -70,6 +70,7 @@ bool MyRobotHWSim::initSim(
 
   // Resize vectors to our DOF
   n_dof_ = transmissions.size();
+
   joint_names_.resize(n_dof_);
   joint_types_.resize(n_dof_);
   joint_lower_limits_.resize(n_dof_);
@@ -147,6 +148,9 @@ bool MyRobotHWSim::initSim(
       << "' of type '" << hardware_interface << "'");
 
     // Create joint state interface for all joints
+    //js_interface_ is inherited from public HardwareResourceManager<JointStateHandle>
+    //public ResourceManager<ResourceHandle>, including the registerhandle function.
+
     js_interface_.registerHandle(hardware_interface::JointStateHandle(
         joint_names_[j], &joint_position_[j], &joint_velocity_[j], &joint_effort_[j]));
 

@@ -28,6 +28,7 @@ public:
   virtual ~GazeboRosControlPluginKP();
 
   //overloaded gazebo entry point;
+  //Called when a Plugin is first created, and after the World has been loaded
   virtual void Load(gazebo::physics::ModelPtr parent, sdf::ElementPtr sdf);
 
   //called by the world update start event;

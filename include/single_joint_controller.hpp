@@ -1,8 +1,7 @@
 #pragma once
 #include "controller_interface/controller.h"
 #include "hardware_interface/joint_command_interface.h"
-#include "gazebo_sim.hpp"//the hardware interface of the robot
-#include "gazebo_ros_control_plugin_kp.hpp"//the plugin of the gazebo_ros_control_kp
+#include <angles/angles.h>
 #include <pluginlib/class_list_macros.hpp>
 #include <control_toolbox/pid.h>
 #include <urdf/model.h>
