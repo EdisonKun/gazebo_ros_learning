@@ -66,6 +66,7 @@
 
 // URDF
 #include <urdf/model.h>
+#include <robot_state_interface_kp.hpp>
 
 
 
@@ -111,6 +112,11 @@ protected:
   hardware_interface::PositionJointInterface pj_interface_;
   hardware_interface::VelocityJointInterface vj_interface_;
 
+  hardware_interface::RobotStateInterfaceKP robot_state_interface_;
+  hardware_interface::RobotStateHandleKP::Data robot_state_data_;
+  double pos_read[12], pos_write[12], vel_read[12], vel_write[12], eff_read[12], eff_write[12];
+  double position[3], orientation[3], linear_vel[3], angular_vel[3];
+
   joint_limits_interface::EffortJointSaturationInterface   ej_sat_interface_;
   joint_limits_interface::EffortJointSoftLimitsInterface   ej_limits_interface_;
   joint_limits_interface::PositionJointSaturationInterface pj_sat_interface_;
@@ -134,6 +140,8 @@ protected:
   std::vector<double> joint_velocity_command_;
 
   std::vector<gazebo::physics::JointPtr> sim_joints_;
+  gazebo::physics::LinkPtr base_link_ptr_, lf_foot_link_ptr_, rf_foot_link_ptr_, rh_foot_link_ptr_, lh_foot_link_ptr_;
+  double real_time_factor;
 
   std::string physics_type_;
 

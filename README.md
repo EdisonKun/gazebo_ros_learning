@@ -88,3 +88,5 @@ In the urdf file you uses in gazebo:
 </gazebo>
 ```
 So the gazebo_sim will link the hardwareinterface with the this urdf.
+
+4. The robot_state_interface(handle) should also be registered in gazebosim.cpp

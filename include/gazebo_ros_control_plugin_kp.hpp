@@ -15,7 +15,7 @@
 
 //ROS Control
 #include <gazebo_ros_control/robot_hw_sim.h>
-#include <gazebo_sim.hpp>
+//#include <gazebo_sim.hpp>
 #include <controller_manager/controller_manager.h>
 #include <transmission_interface/transmission_parser.h>
 

@@ -149,6 +149,7 @@ void GazeboRosControlPluginKP::Load(gazebo::physics::ModelPtr parent, sdf::Eleme
     //Create the controller manager
     ROS_DEBUG_STREAM_NAMED("ros_control_plugin","Loading controller manager");
     controller_manager_.reset(new controller_manager::ControllerManager(robot_hw_sim_.get(),model_nh_));
+    //sharedptr.get return the stored pointer.
 
     //Listen to the update event. this event is broadcast every simulation iteration.
     update_connection_ =

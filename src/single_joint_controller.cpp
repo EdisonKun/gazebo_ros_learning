@@ -13,7 +13,7 @@ single_joint_controller::~single_joint_controller()
 }
 
 
-bool single_joint_controller::init(hardware_interface::EffortJointInterface *hardware, ros::NodeHandle &node_handle)
+bool single_joint_controller::init(hardware_interface::RobotStateInterfaceKP *hardware, ros::NodeHandle &node_handle)
 {
   ROS_INFO("Initializing single_joint_controller");
 
@@ -29,17 +29,19 @@ bool single_joint_controller::init(hardware_interface::EffortJointInterface *har
     ROS_ERROR_STREAM("List of joint names is empty.");
   }
   ROS_INFO("there are %d joints", num_joints_);
+
+  robot_state_handle_ = hardware->getHandle("base_link");
+
   for(unsigned int i = 0; i < num_joints_; i++)
   {
     try{
-      joints_.push_back(hardware->getHandle(joint_names_[i]));
+      joints_.push_back(hardware->joint_effort_interfaces.getHandle(joint_names_[i]));
       ROS_INFO("Get '%s' Handle", joint_names_[i].c_str());
     } catch (const hardware_interface::HardwareInterfaceException& ex){
       ROS_ERROR_STREAM("Exception thrown : " << ex.what());
       return false;
     }
   }
-
     urdf::Model urdf;
     if (!urdf.initParam("/robot_description"))
     {
@@ -82,6 +84,9 @@ void single_joint_controller::update(const ros::Time &time, const ros::Duration 
     joints_[i].setCommand(effort_command);
     ROS_INFO_STREAM(effort_command);
   }
+
+  ROS_INFO_STREAM("The position of base is" << robot_state_handle_.getPosition()<<"****");
+
 }
 
 void single_joint_controller::starting(const ros::Time &time){

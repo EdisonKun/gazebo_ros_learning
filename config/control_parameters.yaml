@@ -14,6 +14,7 @@ single_joint_controller:
   rear_right_1_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
   rear_right_2_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
   rear_right_3_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  base_link: base_link
 
 all_joints_position_group_controller:
   type: position_controllers/JointGroupPositionController

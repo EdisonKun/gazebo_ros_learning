@@ -8,6 +8,7 @@
   <arg name="debug" default="false"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+  <param name="/real_time_factor" value="0.5" />
 
   <param name="robot_description" command="$(find xacro)/xacro '$(find new_quadruped_model_kp)/urdf/new_quadruped_model_kp.urdf.xacro'
     --inorder

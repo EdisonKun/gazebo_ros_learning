@@ -64,9 +64,32 @@ bool MyRobotHWSim::initSim(
   const urdf::Model *const urdf_model,
   std::vector<transmission_interface::TransmissionInfo> transmissions)
 {
+  ROS_INFO("Initializing MyRobotHWSim");
+  robot_state_data_.name = "base_link";
+  robot_state_data_.position = position;
+  robot_state_data_.orientation = orientation;
+  robot_state_data_.linear_velocity = linear_vel;
+  robot_state_data_.angular_velocity = angular_vel;
+  robot_state_data_.joint_position_read = pos_read;
+  robot_state_data_.joint_position_write = pos_write;
+  robot_state_data_.joint_velocity_read = vel_read;
+  robot_state_data_.joint_velocity_write = vel_write;
+  robot_state_data_.joint_effort_read = eff_read;
+  robot_state_data_.joint_effort_write = eff_write;
+
+  robot_state_interface_.registerHandle(hardware_interface::RobotStateHandleKP(robot_state_data_));
+
+
+
   // getJointLimits() searches joint_limit_nh for joint limit parameters. The format of each
   // parameter's name is "joint_limits/<joint name>". An example is "joint_limits/axle_joint".
   const ros::NodeHandle joint_limit_nh(model_nh);
+
+  if(!model_nh.getParam("/real_time_factor", real_time_factor))
+  {
+    ROS_ERROR("Can not find parameter of 'real_time_factor'");
+    return false;
+  }
 
   // Resize vectors to our DOF
   n_dof_ = transmissions.size();
@@ -162,6 +185,7 @@ bool MyRobotHWSim::initSim(
       joint_control_methods_[j] = EFFORT;
       joint_handle = hardware_interface::JointHandle(js_interface_.getHandle(joint_names_[j]),
                                                      &joint_effort_command_[j]);
+      robot_state_interface_.joint_effort_interfaces.registerHandle(joint_handle);
       ej_interface_.registerHandle(joint_handle);
     }
     else if(hardware_interface == "PositionJointInterface" || hardware_interface == "hardware_interface/PositionJointInterface")
@@ -191,9 +215,7 @@ bool MyRobotHWSim::initSim(
       ROS_WARN_STREAM("Deprecated syntax, please prepend 'hardware_interface/' to '" << hardware_interface << "' within the <hardwareInterface> tag in joint '" << joint_names_[j] << "'.");
     }
 
-    // Get the gazebo joint that corresponds to the robot joint.
-    //ROS_DEBUG_STREAM_NAMED("default_robot_hw_sim", "Getting pointer to gazebo joint: "
-    //  << joint_names_[j]);
+    base_link_ptr_ = parent_model->GetLink("base_link");
     gazebo::physics::JointPtr joint = parent_model->GetJoint(joint_names_[j]);
     if (!joint)
     {
@@ -256,6 +278,7 @@ bool MyRobotHWSim::initSim(
   registerInterface(&ej_interface_);
   registerInterface(&pj_interface_);
   registerInterface(&vj_interface_);
+  registerInterface(&robot_state_interface_);
 
   // Initialize the emergency stop code.
   e_stop_active_ = false;
@@ -285,7 +308,28 @@ void MyRobotHWSim::readSim(ros::Time time, ros::Duration period)
     }
     joint_velocity_[j] = sim_joints_[j]->GetVelocity(0);
     joint_effort_[j] = sim_joints_[j]->GetForce((unsigned int)(0));
+    //KP:update joint states
+    robot_state_data_.joint_position_read[j] = joint_position_[j];
+    robot_state_data_.joint_effort_read[j] = joint_effort_[j];
+    robot_state_data_.joint_velocity_read[j] = joint_velocity_[j];
   }
+  //KP: for sim, read from gazebo
+  robot_state_data_.position[0] = base_link_ptr_->GetWorldCoGPose().pos.x;
+  robot_state_data_.position[1] = base_link_ptr_->GetWorldCoGPose().pos.y;
+  robot_state_data_.position[2] = base_link_ptr_->GetWorldCoGPose().pos.z;
+
+  robot_state_data_.orientation[0] = base_link_ptr_->GetWorldCoGPose().rot.w;
+  robot_state_data_.orientation[1] = base_link_ptr_->GetWorldCoGPose().rot.x;
+  robot_state_data_.orientation[2] = base_link_ptr_->GetWorldCoGPose().rot.y;
+  robot_state_data_.orientation[3] = base_link_ptr_->GetWorldCoGPose().rot.z;
+
+  robot_state_data_.linear_velocity[0] = real_time_factor * base_link_ptr_->GetWorldLinearVel().x;
+  robot_state_data_.linear_velocity[1] = real_time_factor * base_link_ptr_->GetWorldLinearVel().y;
+  robot_state_data_.linear_velocity[2] = real_time_factor * base_link_ptr_->GetWorldLinearVel().z;
+
+  robot_state_data_.angular_velocity[0] = real_time_factor * base_link_ptr_->GetWorldAngularVel().x;
+  robot_state_data_.angular_velocity[1] = real_time_factor * base_link_ptr_->GetWorldAngularVel().y;
+  robot_state_data_.angular_velocity[2] = real_time_factor * base_link_ptr_->GetWorldAngularVel().z;
 }
 
 void MyRobotHWSim::writeSim(ros::Time time, ros::Duration period)
