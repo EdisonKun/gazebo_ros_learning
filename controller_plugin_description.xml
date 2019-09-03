@@ -1,7 +1,17 @@
-<library path="lib/libsingle_joint_controller">
-  <class name="controller_ns/single_joint_controller"
-         type="controller_ns::single_joint_controller"
-         base_class_type="controller_interface::ControllerBase">
-    <description>A single joint  controller.</description>
-  </class>
-</library>
+<class_libraries>
+  <library path="lib/libsingle_joint_controller">
+    <class name="controller_ns/single_joint_controller"
+           type="controller_ns::single_joint_controller"
+           base_class_type="controller_interface::ControllerBase">
+      <description>A single joint  controller.</description>
+    </class>
+  </library>
+
+  <library path="lib/libtwo_joints_controller">
+    <class name="controller_ns/two_joints_controller"
+           type="controller_ns::two_joints_controller"
+           base_class_type="controller_interface::ControllerBase">
+      <description>two_joints_control controller.</description>
+    </class>
+  </library>
+</class_libraries>
