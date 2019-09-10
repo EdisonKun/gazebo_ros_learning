@@ -47,3 +47,25 @@ all_joints_position_effort_group_controller:
   rear_right_1_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
   rear_right_2_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
   rear_right_3_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+
+two_joints_controller:
+  type: controller_ns/two_joints_controller
+  joints: ['front_left_1_joint', 'front_left_2_joint']
+  front_left_1_joint/pid: {p: 5.0, i: 5.0, d: 0.0}
+  front_left_2_joint/pid: {p: 5.0, i: 5.0, d: 0.0}
+
+sync_gazebo_rviz_controller:
+  type: controller_ns/sync_gazebo_rviz_controller
+  joints: ['front_left_1_joint', 'front_left_2_joint', 'front_left_3_joint', 'front_right_1_joint', 'front_right_2_joint', 'front_right_3_joint', 'rear_right_1_joint', 'rear_right_2_joint', 'rear_right_3_joint', 'rear_left_1_joint', 'rear_left_2_joint', 'rear_left_3_joint']
+  front_left_1_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  front_left_2_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  front_left_3_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  front_right_1_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  front_right_2_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  front_right_3_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  rear_left_1_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  rear_left_2_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  rear_left_3_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  rear_right_1_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  rear_right_2_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}
+  rear_right_3_joint/pid: {p: 1000.0, i: 0.01, d: 10.0}

@@ -21,7 +21,23 @@ find_package(catkin REQUIRED COMPONENTS
   urdf
   angles
   gazebo_ros_control
+  message_generation
+  geometry_msgs
+  sensor_msgs
+  nav_msgs
 )
+
+add_message_files(
+    DIRECTORY msg FILES
+    joint_state.msg)
+
+generate_messages(
+    DEPENDENCIES
+    std_msgs
+    geometry_msgs
+    trajectory_msgs
+    sensor_msgs
+    nav_msgs)
 
 catkin_package(
   CATKIN_DEPENDS
@@ -35,6 +51,10 @@ catkin_package(
     joint_limits_interface
     urdf
     angles
+    message_runtime
+    geometry_msgs
+    trajectory_msgs
+
   INCLUDE_DIRS include
 )
 
@@ -44,6 +64,7 @@ include_directories(
     include
     ${catkin_INCLUDE_DIRS}
     )
+
 # add_library(single_joint_control
 #     src/single_joint_control.cpp
 #   )
@@ -84,7 +105,12 @@ target_link_libraries(two_joints_controller
   ${catkin_LIBRARIES}
 )
 
+add_library(robot_display_with_gazebo_rviz lib/robot_display_with_gazebo_rviz.cpp)
+target_link_libraries(robot_display_with_gazebo_rviz
+  ${catkin_LIBRARIES}
+)
+
 foreach(dir config launch meshes urdf)
-	install(DIRECTORY ${dir}/
-		DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir})
+        install(DIRECTORY ${dir}/
+                DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir})
 endforeach(dir)

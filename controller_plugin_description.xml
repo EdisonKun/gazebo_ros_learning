@@ -7,6 +7,14 @@
     </class>
   </library>
 
+  <library path="lib/librobot_display_with_gazebo_rviz">
+    <class name="controller_ns/sync_gazebo_rviz_controller"
+           type="controller_ns::sync_gazebo_rviz_controller"
+           base_class_type="controller_interface::ControllerBase">
+      <description>sync_gazebo_rviz_controller.</description>
+    </class>
+  </library>
+
   <library path="lib/libtwo_joints_controller">
     <class name="controller_ns/two_joints_controller"
            type="controller_ns::two_joints_controller"

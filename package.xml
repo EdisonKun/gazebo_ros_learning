@@ -31,6 +31,11 @@ This package contains configuration data, 3D models and launch files for new_qua
 <depend>gazebo</depend>
 <depend>gazebo_ros_control</depend>
 <depend>controller_interface</depend>
+<depend>sensor_msgs</depend>
+<depend>geometry_msgs</depend>
+<depend>message_generation</depend>
+<depend>message_runtime</depend>
+<depend>trajectory_msgs</depend>
 <export>
     <gazebo_ros_control plugin="${prefix}/robot_hw_sim_plugins.xml"/>
     <controller_interface plugin="${prefix}/controller_plugin_description.xml"/>

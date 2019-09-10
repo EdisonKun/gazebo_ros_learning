@@ -1,21 +1,21 @@
-#include "single_joint_controller.hpp"
-#include "ros/ros.h"
+#include "robot_display_with_gazebo_rviz.hpp"
+
 namespace controller_ns {
 
-single_joint_controller::single_joint_controller()
+sync_gazebo_rviz_controller::sync_gazebo_rviz_controller()
 {
   ROS_INFO("Let's start");
 }
 
-single_joint_controller::~single_joint_controller()
+sync_gazebo_rviz_controller::~sync_gazebo_rviz_controller()
 {
   ROS_INFO("End");
 }
 
 
-bool single_joint_controller::init(hardware_interface::RobotStateInterfaceKP *hardware, ros::NodeHandle &node_handle)
+bool sync_gazebo_rviz_controller::init(hardware_interface::RobotStateInterfaceKP *hardware, ros::NodeHandle &node_handle)
 {
-  ROS_INFO("Initializing single_joint_controller");
+  ROS_INFO("Initializing sync_gazebo_rviz_controller");
 
   std::string param_name = "joints";
   if(!node_handle.getParam(param_name,joint_names_))
@@ -65,7 +65,7 @@ bool single_joint_controller::init(hardware_interface::RobotStateInterfaceKP *ha
     joint_urdfs_.push_back(joint_urdf);
 
 
-    if (!pid_controllers_[i].init(ros::NodeHandle(node_handle,"/single_joint_controller/"
+    if (!pid_controllers_[i].init(ros::NodeHandle(node_handle,"/sync_gazebo_rviz_controller/"
                                                   + joint_names_[i] + "/pid")))
     {
         ROS_ERROR_STREAM("Failed to load PID parameters from" << joint_names_[i] + "/pid");
@@ -73,14 +73,17 @@ bool single_joint_controller::init(hardware_interface::RobotStateInterfaceKP *ha
 
     }
 
-//    robot_state_publisher_ = node_handle.advertise<free_gait_msgs>
-    joints_publisher_ = node_handle.advertise<new_quadruped_model_kp::joint_state>("/gazebo/joint_state",1);
+  joints_publisher_ = node_handle.advertise<sensor_msgs::JointState>("/joint_states",1);
+//  robot_state_publisher_ = node_handle.advertise<new_quadruped_model_kp::>()
+  q_state.name.resize(joint_names_.size());
+  q_state.effort.resize(joint_names_.size());
+  q_state.position.resize(joint_names_.size());
+  q_state.velocity.resize(joint_names_.size());
   return true;
 }
 
-void single_joint_controller::update(const ros::Time &time, const ros::Duration &period)
+void sync_gazebo_rviz_controller::update(const ros::Time &time, const ros::Duration &period)
 {
-    new_quadruped_model_kp::joint_state q_state;
   ROS_INFO("UPDATE THE CONTROLLER!");
   double command = 0.0;
   for (unsigned int i = 0; i < num_joints_; ++i) {
@@ -88,42 +91,26 @@ void single_joint_controller::update(const ros::Time &time, const ros::Duration 
     joints_[i].setCommand(effort_command);
     ROS_INFO_STREAM(effort_command);
   }
-  for (unsigned int i = 0; i < 3; ++i) {
-      q_state.lf_leg_joints.name.push_back(joint_names_[i]);
-      q_state.lf_leg_joints.position.push_back(joints_[i].getPosition());
-      q_state.lf_leg_joints.velocity.push_back(joints_[i].getVelocity());
-      q_state.lf_leg_joints.effort.push_back(joints_[i].getEffort());
+  q_state.header.stamp = ros::Time::now();
+  for (unsigned int i = 0; i < joint_names_.size(); ++i) {
+    q_state.name[i] = joint_names_[i];
+    q_state.effort[i] = joints_[i].getEffort();
+    q_state.position[i] = joints_[i].getPosition();
+    q_state.velocity[i] = joints_[i].getVelocity();
   }
-  for (unsigned int i = 3; i < 6; ++i) {
-      q_state.lh_leg_joints.name.push_back(joint_names_[i]);
-      q_state.lh_leg_joints.position.push_back(joints_[i].getPosition());
-      q_state.lh_leg_joints.velocity.push_back(joints_[i].getVelocity());
-      q_state.lh_leg_joints.effort.push_back(joints_[i].getEffort());
-  }
-  for (unsigned int i = 6; i < 9; ++i) {
-      q_state.rf_leg_joints.name.push_back(joint_names_[i]);
-      q_state.rf_leg_joints.position.push_back(joints_[i].getPosition());
-      q_state.rf_leg_joints.velocity.push_back(joints_[i].getVelocity());
-      q_state.rf_leg_joints.effort.push_back(joints_[i].getEffort());
-  }
-  for (unsigned int i = 9; i < 12; ++i) {
-      q_state.rh_leg_joints.name.push_back(joint_names_[i]);
-      q_state.rh_leg_joints.position.push_back(joints_[i].getPosition());
-      q_state.rh_leg_joints.velocity.push_back(joints_[i].getVelocity());
-      q_state.rh_leg_joints.effort.push_back(joints_[i].getEffort());
-  }
+
   joints_publisher_.publish(q_state);
   ROS_INFO_STREAM("The position of base is" << *robot_state_handle_.getPosition()<<"****");
 
 }
 
-void single_joint_controller::starting(const ros::Time &time){
+void sync_gazebo_rviz_controller::starting(const ros::Time &time){
   ROS_INFO("starting single joint controller");
 }
 
-void single_joint_controller::stopping(const ros::Time &){}
+void sync_gazebo_rviz_controller::stopping(const ros::Time &){}
 
-double single_joint_controller::ComputeTorqueFromPositionCommand(double command, int i, const ros::Duration &period)
+double sync_gazebo_rviz_controller::ComputeTorqueFromPositionCommand(double command, int i, const ros::Duration &period)
 {
   double command_position = command;
 
@@ -155,6 +142,4 @@ double single_joint_controller::ComputeTorqueFromPositionCommand(double command,
 
 }//namespace
 
-PLUGINLIB_EXPORT_CLASS(controller_ns::single_joint_controller,controller_interface::ControllerBase)
-
-
+PLUGINLIB_EXPORT_CLASS(controller_ns::sync_gazebo_rviz_controller,controller_interface::ControllerBase)

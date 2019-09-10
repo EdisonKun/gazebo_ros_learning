@@ -6,6 +6,7 @@
 #include <control_toolbox/pid.h>
 #include <urdf/model.h>
 #include <robot_state_interface_kp.hpp>
+#include "new_quadruped_model_kp/joint_state.h"
 
 namespace controller_ns {
 
@@ -26,6 +27,7 @@ private:
   std::string base_name_;
   std::vector<std::string> joint_names_;
   unsigned int num_joints_;
+  ros::Publisher joints_publisher_, robot_state_publisher_;
 
   std::vector<urdf::JointConstSharedPtr> joint_urdfs_;
   std::vector<control_toolbox::Pid> pid_controllers_;
