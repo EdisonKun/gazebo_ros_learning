@@ -100,7 +100,22 @@ void sync_gazebo_rviz_controller::update(const ros::Time &time, const ros::Durat
   }
 
   joints_publisher_.publish(q_state);
-  ROS_INFO_STREAM("The position of base is" << *robot_state_handle_.getPosition()<<"****");
+//  static double origin1 = 0;
+//  static double origin2 = 0;
+//  static double origin3 = 0;
+//  origin1 = robot_state_handle_.getPosition()[0];
+//  origin2 = robot_state_handle_.getPosition()[1];
+//  origin3 = robot_state_handle_.getPosition()[2];
+//  std::cout << "origin 1 is " << origin1 << std::endl;
+  transform.setOrigin( tf::Vector3(robot_state_handle_.getPosition()[0], robot_state_handle_.getPosition()[1], -robot_state_handle_.getPosition()[2]));
+
+  q.setX(robot_state_handle_.getOrientation()[1]);
+  q.setY(robot_state_handle_.getOrientation()[2]);
+  q.setZ(robot_state_handle_.getOrientation()[3]);
+  q.setW(robot_state_handle_.getOrientation()[0]);
+  transform.setRotation(q);
+
+  br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "base_link"));
 
 }
 

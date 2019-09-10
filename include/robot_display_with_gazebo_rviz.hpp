@@ -7,6 +7,7 @@
 #include <urdf/model.h>
 #include <new_quadruped_model_kp/joint_state.h>
 #include <angles/angles.h>
+#include <tf/transform_broadcaster.h>
 
 namespace controller_ns {
 class sync_gazebo_rviz_controller: public controller_interface::Controller<hardware_interface::RobotStateInterfaceKP>
@@ -32,6 +33,11 @@ private:
     std::vector<urdf::JointConstSharedPtr> joint_urdfs_;
     std::vector<control_toolbox::Pid> pid_controllers_;
     sensor_msgs::JointState q_state;
+
+    tf::TransformBroadcaster br;
+    tf::Transform transform;
+    tf::Quaternion q;
+
 
 };
 }//namespace
