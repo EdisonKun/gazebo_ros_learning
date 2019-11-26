@@ -5,7 +5,7 @@
 #include <control_toolbox/pid.h>
 #include <pluginlib/class_list_macros.h>
 #include <urdf/model.h>
-#include <new_quadruped_model_kp/joint_state.h>
+// #include <new_quadruped_model_kp/joint_state.h>
 #include <angles/angles.h>
 #include <tf/transform_broadcaster.h>
 

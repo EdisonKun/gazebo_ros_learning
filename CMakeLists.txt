@@ -105,10 +105,10 @@ target_link_libraries(two_joints_controller
   ${catkin_LIBRARIES}
 )
 
-add_library(robot_display_with_gazebo_rviz lib/robot_display_with_gazebo_rviz.cpp)
-target_link_libraries(robot_display_with_gazebo_rviz
-  ${catkin_LIBRARIES}
-)
+#add_library(robot_display_with_gazebo_rviz lib/robot_display_with_gazebo_rviz.cpp)
+#target_link_libraries(robot_display_with_gazebo_rviz
+#  ${catkin_LIBRARIES}
+#)
 
 foreach(dir config launch meshes urdf)
         install(DIRECTORY ${dir}/
